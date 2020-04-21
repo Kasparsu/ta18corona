@@ -1,11 +1,15 @@
 <template>
   <div class="card">
+    <nuxt-link :to="data.Slug">
     <header class="card-header has-background-info">
       <p class="card-header-title">
+
         {{data.Country}}
+
       </p>
       <img v-if="data.CountryCode" :src="flagUrl">
     </header>
+    </nuxt-link>
     <div class="card-content">
       <table>
         <tbody>
