@@ -1,5 +1,8 @@
 <template>
-  <canvas ref="myChart"></canvas>
+  <div>
+    <canvas ref="myChart"></canvas>
+    <slot></slot>
+  </div>
 </template>
 
 <script>
@@ -10,19 +13,35 @@
         props: ['labels', 'data'],
         data() {
           return {
-
+            chart: null
+          }
+        },
+        updated() {
+          this.chart.data.datasets = this.$children.map(dataset => {
+            return  {
+              label: dataset.title,
+              data: dataset.data,
+              borderColor: dataset.color,
+              backgroundColor: dataset.color
+            }
+          });
+          this.chart.update();
+        },
+      watch: {
+          labels(labels, oldLabels){
+            this.chart.data.labels = labels;
+            this.chart.update();
+          },
+          data(data, oldData){
+            this.chart.data.datasets[0].data = data;
+            this.chart.update();
           }
         },
         mounted() {
-          var myChart = new Chart(this.$refs['myChart'],{
+          this.chart = new Chart(this.$refs['myChart'],{
             type: 'line',
             data: {
-              labels: this.labels,
-              datasets: [{
-                label: '# of Votes',
-                data: this.data,
-                borderWidth: 1
-              }]
+              labels: this.labels
             },
             options: {
               scales: {
