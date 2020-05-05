@@ -9,6 +9,11 @@ export const state = () => ({
     confirmed: [],
     deaths:[],
     recovered: [],
+  },
+  map: {
+    geoJSON: {
+
+    }
   }
 });
 
@@ -34,6 +39,9 @@ export const mutations = {
     SET_RECOVERED_TIMELINE(state, payload){
       state.timeline.recovered = payload;
     },
+    SET_MAP_GEOJSON(state, payload){
+    state.map.geoJSON = payload;
+    },
 };
 
 export const actions = {
@@ -46,6 +54,12 @@ export const actions = {
   fetchTimeline({commit}, {slug, type}){
     this.$axios.$get(`https://api.covid19api.com/dayone/country/${slug}/status/${type}/live`).then(resp => {
       commit('SET_' + type.toUpperCase() + '_TIMELINE', resp);
+    });
+  },
+  fetchGeoJSON({commit}){
+    this.$axios.$get('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json').then(resp => {
+      commit('SET_MAP_GEOJSON', resp);
+
     });
   }
 };
@@ -81,5 +95,17 @@ export const getters = {
       }
       return 0;
     });
+  },
+  confirmedGeoJSON(state){
+    let geoJSON = JSON.parse(JSON.stringify(state.map.geoJSON));
+    state.countries.forEach(country => {
+      geoJSON.features.map(feature => {
+        if(feature.properties.name.toLowerCase() === country.Country.toLowerCase()) {
+          feature.properties.cases = country.TotalConfirmed;
+        }
+        return feature;
+      });
+    });
+    return geoJSON;
   }
 };
