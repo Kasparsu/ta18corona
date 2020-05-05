@@ -17,7 +17,7 @@
           },
           geoJSON(newGeoJSON){
             console.log(newGeoJSON);
-            L.geoJson(newGeoJSON).addTo(this.map);
+            L.geoJson(newGeoJSON, {style: this.style}).addTo(this.map);
           }
         },
         mounted() {
@@ -35,7 +35,32 @@
           return {
             map: null
           }
+        },
+      methods: {
+        getColor(d) {
+          return d > 10000 ? '#800026' :
+            d > 5000  ? '#BD0026' :
+              d > 2000  ? '#E31A1C' :
+                d > 1000  ? '#FC4E2A' :
+                  d > 500   ? '#FD8D3C' :
+                    d > 200   ? '#FEB24C' :
+                      d > 100   ? '#FED976' :
+                        d > 50   ? '#FEF9BE' :
+                      d > 10 ?  '#FFF1D2' :
+                        '#FFFFFF'
+         },
+        style(feature) {
+          return {
+            fillColor: this.getColor(feature.properties.cases),
+              weight: 2,
+              opacity: 1,
+              color: 'white',
+              dashArray: '3',
+              fillOpacity: 0.7
+          };
         }
+
+      }
     }
 </script>
 

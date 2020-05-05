@@ -1,5 +1,5 @@
 <template>
-    <leaflet-map :center="[-49,-42]" :zoom="4" :geoJSON="this.$store.state.map.geoJSON"></leaflet-map>
+    <leaflet-map :center="[-49,-42]" :zoom="4" :geoJSON="this.$store.getters.confirmedGeoJSON"></leaflet-map>
 </template>
 
 <script>
@@ -7,6 +7,7 @@
     export default {
       components: {LeafletMap},
       created() {
+        this.$store.dispatch('fetchStatistics');
         this.$store.dispatch('fetchGeoJSON');
       }
     }

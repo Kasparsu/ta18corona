@@ -12,7 +12,7 @@ export const state = () => ({
   },
   map: {
     geoJSON: {
-
+      features: []
     }
   }
 });
@@ -46,13 +46,13 @@ export const mutations = {
 
 export const actions = {
   fetchStatistics({commit}){
-    this.$axios.$get('https://api.covid19api.com/summary').then(resp => {
+    this.$axios.$get('http://localhost:8000/api/corona/summary').then(resp => {
       commit('SET_COUNTRIES', resp.Countries);
       commit('SET_GLOBAL', resp.Global);
     });
   },
   fetchTimeline({commit}, {slug, type}){
-    this.$axios.$get(`https://api.covid19api.com/dayone/country/${slug}/status/${type}/live`).then(resp => {
+    this.$axios.$get(`http://localhost:8000/api/corona/dayone/country/${slug}/status/${type}/live`).then(resp => {
       commit('SET_' + type.toUpperCase() + '_TIMELINE', resp);
     });
   },
@@ -99,7 +99,7 @@ export const getters = {
   confirmedGeoJSON(state){
     let geoJSON = JSON.parse(JSON.stringify(state.map.geoJSON));
     state.countries.forEach(country => {
-      geoJSON.features.map(feature => {
+      geoJSON.features.forEach(feature => {
         if(feature.properties.name.toLowerCase() === country.Country.toLowerCase()) {
           feature.properties.cases = country.TotalConfirmed;
         }
