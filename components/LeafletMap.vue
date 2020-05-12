@@ -51,7 +51,7 @@
          },
         style(feature) {
           return {
-            fillColor: this.getColor(feature.properties.cases),
+            fillColor: this.getColor(feature.properties.confirmed),
               weight: 2,
               opacity: 1,
               color: 'white',
